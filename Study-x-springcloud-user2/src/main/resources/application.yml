@@ -1,0 +1,37 @@
+server:
+  port: 8082
+  
+mybatis:
+  mapper-locations:
+  - classpath:sqlmapper/*.xml
+  
+spring:
+  application:
+    name: app-name-service-user2 # user2这个微服务的名字
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource # 配置当前要使用的数据源的操作类型
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test?serverTimezone=GMT%2B8
+    username: root
+    password: 123054
+
+eureka:
+  client: # 客户端进行Eureka注册的配置
+    service-url:  #eureka注册有安全认证机制
+      defaultZone: http://reg-eureka:reg-eureka@eureka1:8091/eureka,http://reg-eureka:reg-eureka@eureka2:8092/eureka,http://reg-eureka:reg-eureka@eureka3:8093/eureka
+  instance:
+    instance-id: x-springcloud-provider-user2
+    prefer-ip-address: true   #显示微服务的IP地址
+
+
+# default-INFO
+logging:
+  level:
+    root:
+      info
+    com.test.springcloud.controller:
+      DEBUG
+    com.test.springcloud.dao:
+      DEBUG
+  file:
+    F:\\log\\x-springcloud-user2.log   

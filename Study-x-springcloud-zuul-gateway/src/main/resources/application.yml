@@ -1,0 +1,35 @@
+server:
+  port: 8099
+
+eureka:
+  client: # 客户端进行Eureka注册的配置
+    service-url:
+      defaultZone: http://reg-eureka:reg-eureka@eureka1:8091/eureka,http://reg-eureka:reg-eureka@eureka2:8092/eureka,http://reg-eureka:reg-eureka@eureka3:8093/eureka
+    register-with-eureka: true
+  instance:   #zuul注册到eureka中，方便Feign接口通过zuul路由统一调用
+    instance-id: jyz-instance-zuul-gateway
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 2 # 设置心跳的时间间隔（默认是30秒）
+    lease-expiration-duration-in-seconds: 5 # 如果现在超过了5秒的间隔（默认是90秒）
+  
+spring:
+  application:
+    name: app-name-zuul-gateway1
+  security: #访问zuul路由时也需认证
+    user:
+      name: zuul
+      password: zuul
+  
+zuul:
+  routes:
+    user1:  #注意：不能起名  /user-proxy/**  原因 未知，猜测可能是与系统重名
+      path: /user1-proxy/**
+      serviceId: app-name-service-user1
+#    users2:
+#      path: /zuul2-proxy-user/**
+#      url: http://localhost:8090/  #这种方式类似 跳开了Eureka，直接使用url的方式访问。本地url这种方式，不会进行熔断处理
+# 注意层级关系是和routes同级，配置为*，则不再允许通过:http://xxx/app-name-service-user1/xxx形式访问了
+  ignored-services: 
+    "*" 
+  prefix: /jyz
+
