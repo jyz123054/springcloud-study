@@ -42,6 +42,6 @@ public class UserController {
 	}
 	
 	public Object test(Integer id) {
-		return "selectByIdFallback!!! "+id;
+		return "selectByIdFallback!!!2 "+id;
 	}
 }
